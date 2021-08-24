@@ -1,20 +1,25 @@
-import {getAutocompleteInstance, getDatepickerInstance} from '../plugins/materialize';
+import {
+  getAutocompleteInstance,
+  getDatePickerInstance,
+} from '../plugins/materialize';
 
 class FormUI {
-  constructor(autocompleteInstance, datepickerInstance) {
-    this._form = document.forms['locationControls'];
+  constructor(autocompleteInstance, datePickerInstance) {
+    this.$form = document.forms['locationControls'];
     this.origin = document.getElementById('autocomplete-origin');
-    this.destination = document.getElementById('autocomplete-destination');
-    this.depart = document.getElementById('datepicker-depart');
-    this.return = document.getElementById('datepicker-return');
     this.originAutocomplete = autocompleteInstance(this.origin);
+    this.destination = document.getElementById('autocomplete-destination');
     this.destinationAutocomplete = autocompleteInstance(this.destination);
-    this.departDatePicker = datepickerInstance(this.depart);
-    this.returnDatePicker = datepickerInstance(this.return);
+    this.depart = datePickerInstance(
+      document.getElementById('datepicker-depart'),
+    );
+    this.return = datePickerInstance(
+      document.getElementById('datepicker-return'),
+    );
   }
 
   get form() {
-    return this._form;
+    return this.$form;
   }
 
   get originValue() {
@@ -26,11 +31,11 @@ class FormUI {
   }
 
   get departDateValue() {
-    return this.departDatePicker.toString();
+    return this.depart.toString();
   }
 
   get returnDateValue() {
-    return this.returnDatePicker.toString();
+    return this.return.toString();
   }
 
   setAutocompleteData(data) {
@@ -39,6 +44,6 @@ class FormUI {
   }
 }
 
-const formUI = new FormUI(getAutocompleteInstance, getDatepickerInstance);
+const formUI = new FormUI(getAutocompleteInstance, getDatePickerInstance);
 
 export default formUI;
