@@ -172,4 +172,9 @@
   .header .brand-logo {
     display: none;
   }
+
+  .favorites .dropdown-content {
+    max-width: 280px;
+    min-height: 80px;
+  }
 }
