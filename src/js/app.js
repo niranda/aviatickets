@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', e => {
     });
 
     ticketsUI.renderTickets(locations.lastSearch);
-    console.log(locations.lastSearch);
   }
 });
 

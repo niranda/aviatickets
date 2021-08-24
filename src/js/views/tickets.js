@@ -3,7 +3,7 @@ import currencyUI from "./currency";
 class TicketsUI {
   constructor(currency) {
     this.container = document.querySelector(".tickets-sections .row");
-    this.currencySymbol = currency.currencySymbol;
+    this.getCurrencySymbol = currency.getCurrencySymbol.bind(currency);
   }
 
   renderTickets(tickets) {
@@ -15,9 +15,10 @@ class TicketsUI {
     }
 
     let fragment = "";
+    const currency = this.getCurrencySymbol();
 
     tickets.forEach((ticket) => {
-      const template = TicketsUI.ticketTemplate(ticket, this.currencySymbol);
+      const template = TicketsUI.ticketTemplate(ticket, currency);
       fragment += template;
     });
 

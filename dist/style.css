@@ -37,7 +37,7 @@
 
 /* Header styles */
 .header .brand-logo {
-  position: static;
+  position: relative;
 }
 
 .header .favorites {
@@ -166,6 +166,12 @@
   background: whitesmoke;
   font-weight: bold;
   font-size: 18px;
+}
+
+@media (max-width: 416px) {
+  .header .brand-logo {
+    display: none;
+  }
 }
 
 /*!

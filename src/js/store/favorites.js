@@ -4,14 +4,13 @@ import currencyUI from "../views/currency";
 class Favorites {
   constructor(currency) {
     this.favoriteList = {};
-    this.currency = currency.currencySymbol;
+    this.getCurrencySymbol = currency.getCurrencySymbol.bind(currency);
     this.isFavoriteInList = false;
   }
 
   init() {
     const favoritesList = document.getElementById("dropdown1");
     const children = Array.from(favoritesList.children);
-    console.log(children);
     if (!children.length) {
       const h5 = document.createElement("h5");
       h5.classList.add("favoriteText", "center-align");
@@ -19,6 +18,7 @@ class Favorites {
       favoritesList.appendChild(h5);
     } else {
       const h5 = document.querySelector(".favoriteText");
+      if (!h5) return;
       favoritesList.removeChild(h5);
     }
   }
@@ -28,8 +28,17 @@ class Favorites {
     const parent = target.closest(".ticket-card");
     const idKey = parent.dataset.id;
     const idTickets = this.getNewIdTickets(locations.lastSearch);
+    idTickets[idKey].favorite = true;
+    const departureAt = idTickets[idKey].departure_at;
+    Object.values(this.favoriteList).forEach((elem) => {
+      if (departureAt === elem.departure_at) {
+        throw new Error("The card is already in your list");
+      }
+    });
+    this.favoriteList[idKey] = idTickets[idKey];
     this.addFavTicket(idTickets[idKey], this.currency);
     this.init();
+    console.log(this.favoriteList);
   }
 
   onDeleteHandler({ target }) {
@@ -37,8 +46,15 @@ class Favorites {
     const parent = target.closest(".favorite-item");
     const idKey = parent.dataset.id;
     const objIdTickets = this.getNewIdTickets(locations.lastSearch);
-    this.deleteFavTicket(parent, objIdTickets[idKey]);
+    delete this.favoriteList[idKey];
+    if (!objIdTickets.hasOwnProperty(idKey)) {
+      this.deleteFavTicket(parent);
+    } else {
+      this.deleteFavTicket(parent, objIdTickets[idKey]);
+    }
     this.init();
+    console.log(this.favoriteList);
+    console.log(objIdTickets);
   }
 
   getNewIdTickets(ticketsList) {
@@ -52,17 +68,18 @@ class Favorites {
     }, {});
   }
 
-  addFavTicket(ticket, currency) {
-    ticket.favorite = true;
+  addFavTicket(ticket) {
+    const currency = this.getCurrencySymbol();
     const container = document.querySelector(".dropdown-content");
     const elem = Favorites.smallTicketTemplate(ticket, currency);
     container.insertAdjacentHTML("afterbegin", elem);
   }
 
-  deleteFavTicket(ticketHTML, ticket) {
-    ticket.favorite = false;
+  deleteFavTicket(ticketHTML, ticket = null) {
     const container = document.getElementById("dropdown1");
     container.removeChild(ticketHTML);
+    if (!ticket) return;
+    ticket.favorite = false;
   }
 
   static smallTicketTemplate(ticket, currency) {
